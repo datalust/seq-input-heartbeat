@@ -18,18 +18,20 @@ $suffix = @{ $true = ""; $false = "$($branch.Substring(0, [math]::Min(10,$branch
 
 echo "build: Version suffix is $suffix"
 
-Push-Location src/Seq.Input.Heartbeat
+foreach ($src in ls src/*) {
+    Push-Location $src
 
-echo "build: Packaging project in $src"
+    echo "build: Packaging project in $src"
 
-if ($suffix) {
-    & dotnet pack -c Release -o ..\..\artifacts /p:NuspecFile=Seq.Input.Heartbeat.nuspec /p:NuspecBasePath=. --version-suffix=$suffix
-} else {
-    & dotnet pack -c Release -o ..\..\artifacts /p:NuspecFile=Seq.Input.Heartbeat.nuspec /p:NuspecBasePath=.
+    if ($suffix) {
+        & dotnet pack -c Release -o ..\..\artifacts --version-suffix=$suffix
+    } else {
+        & dotnet pack -c Release -o ..\..\artifacts
+    }
+    if($LASTEXITCODE -ne 0) { exit 1 }    
+
+    Pop-Location
 }
-if($LASTEXITCODE -ne 0) { exit 1 }    
-
-Pop-Location
 
 foreach ($test in ls test/*.Tests) {
     Push-Location $test

@@ -9,4 +9,9 @@
     <PackageReference Include="Seq.Apps" Version="5.1.0-*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- This content will end up in the app's working directory at runtime. -->
+    <None Include="example.txt" Pack="true" PackagePath="lib/$(TargetFramework)" />
+  </ItemGroup>
+
 </Project>
